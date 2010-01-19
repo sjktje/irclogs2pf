@@ -15,39 +15,7 @@
 #
 
 ###############################################################################
-# Initial setup
-#
-# This script has been tested with pf on OpenBSD 3.9-stable but will most 
-# probably work on other operating systems with (recent versions of) pf 
-# installed.
-#
-# You'll need a pf table dedicated for this. I chose to call mine "drones", but 
-# you may of course call it whatever you want (if you do decide to call it 
-# something else, please change the constant PFTABLE below.) This is the line
-# I use:
-#
-# table <drones>
-#
-# in my /etc/pf.conf. Now we can add ip addresses to this table, and we can 
-# also have pf act on packets coming in from the ips in the table. I usually
-# want to drop packets from known dronehosts, so I use this line:
-#
-# block drop in log quick on $ext_if from <drones> to ($ext_if) label drones
-# 
-# One can use the expiretable utility (http://expiretable.fnord.se) to remove
-# entries from a pf table based on their age. I call expiretable every hour, 
-# using cron, like this:
-#
-# @hourly		/usr/local/sbin/expiretable -a drones -t 7days
-#
-# Which means that any drone ips that have been banned for over 7 days will be
-# unbanned.
-#
-# UPDATE 2009-10-25: expiretable is superfluous nowadays since pfctl supports
-# the -T expire directive. 
-
-###############################################################################
-# Usage - killdrone [-v]
+# Usage - irclogs2pf [-v] [-t <table>]
 #
 # The script parses IRC logs from standard input. Run the script, paste IRC 
 # logs and press CTRL+d when done.
@@ -72,7 +40,7 @@ sub main {
 	
 	my $optptr = process_args();
 	
-	print "killdrone v".VERSION."\n";
+	print "irclogs2pf v".VERSION."\n";
 
 	print "Verbose mode enabled\n" if $optptr->{"v"};
 
