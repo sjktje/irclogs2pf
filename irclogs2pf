@@ -49,7 +49,7 @@ sub main {
 
 	%hosts = edit_ip_list(%hosts);	# Give the user opportunity to remove ips from list.
 
-	listips(%hosts);
+	listips(%hosts);				# List IP addresses about to be blocked.
 
 	my $answer = askq("\nI'm about to block the above ip addresses. Should I proceed? ");
 	return if ($answer !~ /y/i);
@@ -61,7 +61,6 @@ sub main {
 	pfctladd($ips, $optptr);
 
 	$answer = askq("\nDo you also want me to kill the states of these connections? " );
-
 	print "\n";
 
 	if ($answer =~ /y/i) {
