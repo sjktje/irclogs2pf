@@ -1,2 +1,4 @@
 - Make it possible to insert ranges when ignoring IPS: 1:5,8,10,12:14
 - Abort if no IPS are left.
+- Add switch to skip asking for ips to ignore 
+- Add switch to kill states by default and skip asking.
