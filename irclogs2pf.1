@@ -18,12 +18,11 @@ For
 to be effective the table you're trying to add IP addresses to must exist. A
 PF block rule should also be associated with the table. An example setup may
 look something like:
-.PP
+.Pp
 table <drones>
-.PP
+.Pp
 block drop in log quick on $ext_if from <drones> to ($ext_if)
 .Sh FILES
-.Bl -tag -width "/etc/pf.conf"
 .It /etc/pf.conf
 Default location of the PF configuration file.
 .Sh SEE ALSO
