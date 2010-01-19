@@ -37,23 +37,18 @@ use constant PFTABLE => "drones";
 
 sub main {
 	
+	# Process command line arguments
 	my $optptr = process_args();
 	
 	print "irclogs2pf v".VERSION."\n";
-
 	print "Verbose mode enabled\n" if $optptr->{"v"};
 
 
-	my %hosts = scanip();
+	my %hosts = scanip();			# Scan stdin for user@hosts
 
-	%hosts = list_ips(%hosts);
+	%hosts = edit_ip_list(%hosts);	# Give the user opportunity to remove ips from list.
 
-	print "\033[2J\033[H";	
-	print "\nHosts to block:\n";
-
-	foreach my $ip (sort(keys %hosts)) {
-		print "$ip\n";
-	}
+	listips(%hosts);
 
 	my $answer = askq("\nI'm about to block the above ip addresses. Should I proceed? ");
 	return if ($answer !~ /y/i);
@@ -62,13 +57,12 @@ sub main {
 		$optptr->{"t"} = PFTABLE;
 	}
 
-	my $cmd = "pfctl -t ".$optptr->{"t"}." -T add ";
+	my $ips;
 	foreach my $ip (sort(keys %hosts)) {
-		$cmd .= $ip." ";
+		$ips .= $ip." ";
 	}
 	
-	print "$cmd\n" if $optptr->{"v"};
-	system($cmd);
+	pfctladd($ips, $optptr);
 
 	$answer = askq("\nDo you also want me to kill the states of these connections? " );
 
@@ -76,10 +70,33 @@ sub main {
 
 	if ($answer =~ /y/i) {
 		foreach my $ip (sort(keys %hosts)) {
-			print "pfctl -k $ip\n" if $optptr->{"v"};
-			system("pfctl -k $ip");
+			pfctlkill($ip, $optptr);
 		}
 	}
+}
+
+sub listips {
+	my %hosts = shift;
+	print "\033[2J\033[H";	
+	print "\nHosts to block:\n";
+
+	foreach my $ip (sort(keys %hosts)) {
+		print "$ip\n";
+	}
+}
+
+sub pfctladd {
+	my ($ips, $optref) = @_;
+	my $cmd = "pfctl -t ".$optref->{"t"}." -T add $ips";
+	print "$cmd\n" if $optref->{"v"};
+	system($cmd);
+}
+
+sub pfctlkill {
+	my ($ip, $optref) = @_;
+	my $cmd = "pfctl -k $ip";
+	print "$cmd\n" if $optref->{"v"};
+	system($cmd);
 }
 
 sub process_args {
@@ -110,7 +127,7 @@ sub scanip {
 	return %hosts;
 }
 
-sub list_ips {
+sub edit_ip_list {
 	my %hosts = (@_);
 	
 	my $idx = 0;
