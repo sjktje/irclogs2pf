@@ -4,7 +4,7 @@
 .Sh NAME
 .Nm irclogs2pf
 .Nd grabs hostnames from IRC logs and adds them to a PF table
-.Sh
+.Sh SYNOPSIS
 .Nm
 .Op Fl t Ar table
 .Op Fl v 
@@ -12,19 +12,34 @@
 .Nm irclogs2pf
 adds IP addresses and hostmasks found in IRC log files to a PF table by 
 looking for the pattern "user@host". 
-.Nm REQUIREMENTS
-For 
 .Nm irclogs2pf
-to be effective the table you're trying to add IP addresses to must exist. A
-PF block rule should also be associated with the table. An example setup may
-look something like:
+merely adds the IP addresses to the specified table; it's up to PF whether
+to block them or not. An example pf.conf setup may look something like:
 .Pp
 table <drones>
 .Pp
 block drop in log quick on $ext_if from <drones> to ($ext_if)
+.Pp
+To add all hosts encountered in irc.log except sjk@ankeborg.nu one could use
+.Nm irclogs2pf
+in conjunction with
+.Nm grep :
+.Pp
+$ grep -v 'sjk@ankeborg.nu' irc.log |irclogs2pf
+.Sh OPTIONS
+.Bl -tag -width "-t table"
+.It Fl t Ar table
+Add ips to PF table
+.Ar table .
+(default: 
+.Ar drones )
+.It Fl v
+Verbose output
 .Sh FILES
+.Bl -tag -width "/etc/pf.conf"
 .It /etc/pf.conf
 Default location of the PF configuration file.
+.El
 .Sh SEE ALSO
 .Xr pfctl 8
 .Sh AUTHORS
