@@ -1,20 +1,20 @@
 .Dd January 19, 2010
-.Dt IRCLOG2PF 1
+.Dt IRCLOGS2PF 1
 .Os FreeBSD
 .Sh NAME
-.Nm irclog2pf
+.Nm irclogs2pf
 .Nd grabs hostnames from IRC logs and adds them to a PF table
 .Sh
 .Nm
 .Op Fl t Ar table
 .Op Fl v 
 .Sh DESCRIPTION
-.Nm irclog2pf
+.Nm irclogs2pf
 adds IP addresses and hostmasks found in IRC log files to a PF table by 
 looking for the pattern "user@host". 
 .Nm REQUIREMENTS
 For 
-.Nm irclog2pf
+.Nm irclogs2pf
 to be effective the table you're trying to add IP addresses to must exist. A
 PF block rule should also be associated with the table. An example setup may
 look something like:
