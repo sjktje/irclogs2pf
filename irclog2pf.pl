@@ -104,7 +104,11 @@ sub main {
 	my $answer = askq("\nI'm about to block the above ip addresses. Should I proceed? ");
 	return if ($answer !~ /y/i);
 	
-	my $cmd = "pfctl -t ".PFTABLE." -T add ";
+	if (!defined($optptr->{"t"})) {
+		$optptr->{"t"} = PFTABLE;
+	}
+
+	my $cmd = "pfctl -t ".$optptr->{"t"}." -T add ";
 	foreach my $ip (sort(keys %hosts)) {
 		$cmd .= $ip." ";
 	}
@@ -126,7 +130,7 @@ sub main {
 
 sub process_args {
     my %opt;
-    getopts('v', \%opt);
+    getopts('vt:', \%opt);
     return \%opt;
 }
 
