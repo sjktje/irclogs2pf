@@ -144,10 +144,12 @@ sub list_ips {
 }
 
 sub askq {
+	open USER, "</dev/tty" or die "Could not open /dev/tty: $!";
 	my $question = join('/\s*/', @_);
 	print "$question";
-	my $answer = <STDIN>;
+	my $answer = <USER>;
 	chomp $answer;
+	close USER;
 	return $answer;
 }
 
