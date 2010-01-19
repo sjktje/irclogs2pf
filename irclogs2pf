@@ -169,8 +169,8 @@ sub edit_ip_list {
 }
 
 sub askq {
-	open USER, "</dev/tty" or die "Could not open /dev/tty: $!";
 	my $question = join('/\s*/', @_);
+	open USER, "</dev/tty" or die "Could not open /dev/tty: $!";
 	print "$question";
 	my $answer = <USER>;
 	chomp $answer;
