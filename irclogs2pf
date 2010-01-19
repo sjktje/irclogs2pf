@@ -36,7 +36,8 @@ use constant PFTABLE => "drones";
 
 
 sub main {
-	
+	my $ips;
+
 	# Process command line arguments
 	my $optptr = process_args();
 	
@@ -52,12 +53,7 @@ sub main {
 
 	my $answer = askq("\nI'm about to block the above ip addresses. Should I proceed? ");
 	return if ($answer !~ /y/i);
-	
-	if (!defined($optptr->{"t"})) {
-		$optptr->{"t"} = PFTABLE;
-	}
 
-	my $ips;
 	foreach my $ip (sort(keys %hosts)) {
 		$ips .= $ip." ";
 	}
@@ -102,6 +98,11 @@ sub pfctlkill {
 sub process_args {
     my %opt;
     getopts('vt:', \%opt);
+
+	if (!defined($opt{"t"})) {
+		$opt{"t"} = PFTABLE;
+	}
+
     return \%opt;
 }
 
