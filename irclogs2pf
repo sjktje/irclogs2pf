@@ -166,6 +166,8 @@ sub edit_ip_list {
 	return %hosts;
 }
 
+# Might want to use IO::Prompt instead. But shrug, that's
+# one more module dependancy.
 sub askq {
 	my $question = join('/\s*/', @_);
 	open my $USER, '<', '/dev/tty' or die "Could not open /dev/tty: $!";
