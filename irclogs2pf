@@ -45,7 +45,11 @@ sub main {
 
 	my %hosts = scanip();			# Scan stdin for user@hosts
 
+	exists_hosts(%hosts);			# Exit if %hosts is empty
+
 	%hosts = edit_ip_list(%hosts);	# Give the user opportunity to remove ips from list.
+
+	exists_hosts(%hosts);			# Exit if %hosts is empty
 
 	listips(%hosts);				# List IP addresses about to be blocked.
 
@@ -66,6 +70,16 @@ sub main {
 			pfctlkill($ip, $optref);
 		}
 	}
+}
+
+sub exists_hosts {
+	my (%hosts) = @_;
+
+	if (!keys %hosts) {
+		print "\nNo IP addresses to block, exiting...\n";
+		exit(1);
+	}
+
 }
 
 sub listips {
