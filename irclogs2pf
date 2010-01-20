@@ -33,8 +33,6 @@ use Getopt::Std;
 use constant VERSION => "0.3.1";
 use constant PFTABLE => "drones";
 
-
-
 sub main {
 	my $ips;
 
@@ -170,11 +168,11 @@ sub edit_ip_list {
 
 sub askq {
 	my $question = join('/\s*/', @_);
-	open USER, "</dev/tty" or die "Could not open /dev/tty: $!";
+	open my $USER, '<', '/dev/tty' or die "Could not open /dev/tty: $!";
 	print "$question";
-	my $answer = <USER>;
+	my $answer = <$USER>;
 	chomp $answer;
-	close USER;
+	close $USER;
 	return $answer;
 }
 
