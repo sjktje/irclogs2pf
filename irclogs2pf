@@ -15,7 +15,7 @@
 #
 
 ###############################################################################
-# Usage - irclogs2pf [-vk] [-t <table>]
+# Usage - irclogs2pf [-vVbk] [-t <table>]
 #
 # The script parses IRC logs from standard input. Run the script, paste IRC 
 # logs and press CTRL+d when done.
@@ -39,6 +39,11 @@ sub main {
 
 	# Process command line arguments
 	my $optref = process_args();
+
+	if ($optref->{"V"}) {
+		printversion();
+		return;
+	}
 	
 	print "irclogs2pf v".VERSION."\n";
 	print "Verbose mode enabled\n" if $optref->{"v"};
@@ -120,7 +125,7 @@ sub pfctlkill {
 
 sub process_args {
     my %opt;
-    getopts('bkvt:', \%opt);
+    getopts('bkvVt:', \%opt);
 
 	if (!defined($opt{"t"})) {
 		$opt{"t"} = PFTABLE;
@@ -202,6 +207,11 @@ sub askq {
 	chomp $answer;
 	close $USER;
 	return $answer;
+}
+
+sub printversion {
+	print "irclogs2pf v".VERSION."\n";
+	return;
 }
 
 main();
