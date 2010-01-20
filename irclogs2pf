@@ -30,7 +30,7 @@ use Socket;
 use Net::hostent;
 use Getopt::Std;
 
-use constant VERSION => "0.3.1";
+use constant VERSION => "0.3.2";
 use constant PFTABLE => "drones";
 
 sub main {
