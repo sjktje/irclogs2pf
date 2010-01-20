@@ -69,7 +69,7 @@ sub main {
 }
 
 sub listips {
-	my %hosts = shift;
+	my (%hosts) = @_; 
 	print "\033[2J\033[H";	
 	print "\nHosts to block:\n";
 
