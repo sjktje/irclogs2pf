@@ -1,2 +1,1 @@
 - Make it possible to insert ranges when ignoring IPS: 1:5,8,10,12:14
-- Add switch to skip asking for ips to ignore 

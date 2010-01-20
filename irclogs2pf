@@ -35,6 +35,7 @@ use constant PFTABLE => "drones";
 
 sub main {
 	my $ips;
+	my $answer;
 
 	# Process command line arguments
 	my $optref = process_args();
@@ -43,35 +44,38 @@ sub main {
 	print "Verbose mode enabled\n" if $optref->{"v"};
 
 
-	my %hosts = scanip();			# Scan stdin for user@hosts
+	my %hosts = scanip();				# Scan stdin for user@hosts
 
-	exists_hosts(%hosts);			# Exit if %hosts is empty
+	exists_hosts(%hosts);				# Exit if %hosts is empty
 
-	%hosts = edit_ip_list(%hosts);	# Give the user opportunity to remove ips from list.
+	if (!$optref->{"b"}) {				# -b means batch; don't ask any questions.
+		%hosts = edit_ip_list(%hosts);	# Give the user opportunity to remove ips from list.
+	}
 
-	exists_hosts(%hosts);			# Exit if %hosts is empty
+	exists_hosts(%hosts);				# Exit if %hosts is empty
 
-	listips(%hosts);				# List IP addresses about to be blocked.
+	listips(%hosts);					# List IP addresses about to be blocked.
 
-	my $answer = askq("\nI'm about to block the above ip addresses. Should I proceed? ");
-	return if ($answer !~ /y/i);
+	if (!$optref->{"b"}) {				# -b means batch; don't ask any questions.
+		$answer = askq("\nI'm about to block the above ip addresses. Should I proceed? ");
+		return if ($answer !~ /y/i);
+	}
 
+	# Add IPs to table.
 	foreach my $ip (sort(keys %hosts)) {
 		$ips .= $ip." ";
 	}
-	
 	pfctladd($ips, $optref);
 
 	# If user supplied -k just go ahead and kill the states. Otherwise ask user if
-	# killing states is desirable.
+	# killing states is desirable. Don't ask if user wants batch mode (-b)
 	if ($optref->{"k"}) {
 		foreach my $ip (sort(keys %hosts)) {
 			pfctlkill($ip, $optref);
 		}
-	} else {
+	} elsif (!$optref->{"b"}) {
 		$answer = askq("\nDo you also want me to kill the states of these connections? " );
 		print "\n";
-
 		if ($answer =~ /y/i) {
 			foreach my $ip (sort(keys %hosts)) {
 				pfctlkill($ip, $optref);
@@ -116,7 +120,7 @@ sub pfctlkill {
 
 sub process_args {
     my %opt;
-    getopts('kvt:', \%opt);
+    getopts('bkvt:', \%opt);
 
 	if (!defined($opt{"t"})) {
 		$opt{"t"} = PFTABLE;

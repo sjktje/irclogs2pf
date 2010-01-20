@@ -7,6 +7,7 @@
 .Sh SYNOPSIS
 .Nm
 .Op Fl t Ar table
+.Op Fl b
 .Op Fl v 
 .Op Fl k
 .Sh DESCRIPTION
@@ -38,6 +39,10 @@ Add ips to PF table
 Kill states originating from found IP addresses. (default: ask)
 .It Fl v
 Turn on verbose output
+.It Fl b
+Batch mode. 
+.Nm irclogs2pf
+will not ask any questions. 
 .El
 .Sh FILES
 .Bl -tag -width "/etc/pf.conf"
