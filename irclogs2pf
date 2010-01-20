@@ -15,7 +15,7 @@
 #
 
 ###############################################################################
-# Usage - irclogs2pf [-v] [-t <table>]
+# Usage - irclogs2pf [-vk] [-t <table>]
 #
 # The script parses IRC logs from standard input. Run the script, paste IRC 
 # logs and press CTRL+d when done.
@@ -62,12 +62,20 @@ sub main {
 	
 	pfctladd($ips, $optref);
 
-	$answer = askq("\nDo you also want me to kill the states of these connections? " );
-	print "\n";
-
-	if ($answer =~ /y/i) {
+	# If user supplied -k just go ahead and kill the states. Otherwise ask user if
+	# killing states is desirable.
+	if ($optref->{"k"}) {
 		foreach my $ip (sort(keys %hosts)) {
 			pfctlkill($ip, $optref);
+		}
+	} else {
+		$answer = askq("\nDo you also want me to kill the states of these connections? " );
+		print "\n";
+
+		if ($answer =~ /y/i) {
+			foreach my $ip (sort(keys %hosts)) {
+				pfctlkill($ip, $optref);
+			}
 		}
 	}
 }
@@ -108,7 +116,7 @@ sub pfctlkill {
 
 sub process_args {
     my %opt;
-    getopts('vt:', \%opt);
+    getopts('kvt:', \%opt);
 
 	if (!defined($opt{"t"})) {
 		$opt{"t"} = PFTABLE;

@@ -8,6 +8,7 @@
 .Nm
 .Op Fl t Ar table
 .Op Fl v 
+.Op Fl k
 .Sh DESCRIPTION
 .Nm irclogs2pf
 adds IP addresses and hostmasks found in IRC log files to a PF table by 
@@ -33,8 +34,11 @@ Add ips to PF table
 .Ar table .
 (default: 
 .Ar drones )
+.It Fl k
+Kill states originating from found IP addresses. (default: ask)
 .It Fl v
-Verbose output
+Turn on verbose output
+.El
 .Sh FILES
 .Bl -tag -width "/etc/pf.conf"
 .It /etc/pf.conf
