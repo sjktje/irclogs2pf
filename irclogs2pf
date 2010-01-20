@@ -37,10 +37,10 @@ sub main {
 	my $ips;
 
 	# Process command line arguments
-	my $optptr = process_args();
+	my $optref = process_args();
 	
 	print "irclogs2pf v".VERSION."\n";
-	print "Verbose mode enabled\n" if $optptr->{"v"};
+	print "Verbose mode enabled\n" if $optref->{"v"};
 
 
 	my %hosts = scanip();			# Scan stdin for user@hosts
@@ -56,14 +56,14 @@ sub main {
 		$ips .= $ip." ";
 	}
 	
-	pfctladd($ips, $optptr);
+	pfctladd($ips, $optref);
 
 	$answer = askq("\nDo you also want me to kill the states of these connections? " );
 	print "\n";
 
 	if ($answer =~ /y/i) {
 		foreach my $ip (sort(keys %hosts)) {
-			pfctlkill($ip, $optptr);
+			pfctlkill($ip, $optref);
 		}
 	}
 }
