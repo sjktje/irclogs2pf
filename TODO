@@ -1,1 +1,2 @@
 - Make it possible to insert ranges when ignoring IPS: 1:5,8,10,12:14
+- Support scanning files supplied as args, eg. irclogs2pf -t badips *.log
